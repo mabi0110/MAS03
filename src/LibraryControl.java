@@ -2,7 +2,11 @@
 import exception.DataExportException;
 import exception.DataImportException;
 import exception.NoSuchOptionException;
+import model.*;
+
+import java.time.LocalDate;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class LibraryControl {
@@ -28,22 +32,120 @@ public class LibraryControl {
                 case EXIT -> exit();
                 case ADD_BOOK -> addBook();
                 case PRINT_BOOKS -> printBooks();
-                case PRINT_BOOKS_AMOUNT -> printBooksAmount();
                 case ADD_USER -> addUser();
                 case PRINT_USERS -> printUsers();
+                case ADD_AUTHOR -> addAuthor();
+                case PRINT_AUTHORS -> printAuthors();
+                case BORROW_BOOK -> borrowBook();
+                case PRINT_BORROWED_BOOKS -> printBorrowedBooksHistory();
+                case PRINT_BORROWED_BOOKS_FOR_USER -> printBorrowedBooksForUser();
+                case PRINT_HISTORY_FOR_BOOK -> printHistoryForBook();
             }
-
         } while (option != Option.EXIT);
     }
 
-    private void printBooksAmount() {
-        int booksAmount = Book.booksAmount();
-        if (booksAmount == 0){
-            System.out.println("W bibliotece nie ma dostepnych ksiazek");
-        } else {
-            System.out.println("Ilosc dostepnych ksazek: " + Book.booksAmount());
-        }
+    private void printHistoryForBook() {
+        String title;
+        int year;
+        do {
+            System.out.print("Podaj tytuł ksiązki: ");
+            title = scanner.nextLine();
+            System.out.print("Podaj rok wydania: ");
+            year = scanner.nextInt();
+            scanner.nextLine();
+            if (!Book.checkIfExtentContainsBook(title, year)){
+                System.out.println("W bibliotece nie ma takiej ksiązki");
+            }
+        } while (!Book.checkIfExtentContainsBook(title, year));
+
+        Book book = Book.getBookFromExtent(title, year);
+        List<UserBook> userBooks = book.getUserBooks();
+        userBooks.forEach(System.out::println);
     }
+
+    private void printBorrowedBooksForUser() {
+        String firstName, lastName;
+        do {
+            System.out.print("Podaj imię użytkownika: ");
+            firstName = scanner.nextLine();
+            System.out.print("Podaj nazwisko użytkownika:");
+            lastName = scanner.nextLine();
+            if (!User.checkIfExtentContainsUser(firstName, lastName)){
+                System.out.println("W bibliotece nie ma takiego użytkownika");
+            }
+        } while (!User.checkIfExtentContainsUser(firstName, lastName));
+        User user = User.getUserFromExtent(firstName, lastName);
+        List<UserBook> userBooks = user.getUserBooks();
+        userBooks.forEach(System.out::println);
+    }
+
+    private void printBorrowedBooksHistory() {
+        UserBook.printHistory();
+    }
+
+    private void borrowBook() {
+        String firstName, lastName, title;
+        int year;
+        do {
+            System.out.print("Podaj imię użytkownika: ");
+            firstName = scanner.nextLine();
+            System.out.print("Podaj nazwisko użytkownika:");
+            lastName = scanner.nextLine();
+            if (!User.checkIfExtentContainsUser(firstName, lastName)){
+                System.out.println("W bibliotece nie ma takiego użytkownika");
+            }
+        } while (!User.checkIfExtentContainsUser(firstName, lastName));
+
+        User user = User.getUserFromExtent(firstName, lastName);
+
+        do {
+            System.out.print("Podaj tytuł ksiązki: ");
+            title = scanner.nextLine();
+            System.out.print("Podaj rok wydania: ");
+            year = scanner.nextInt();
+            scanner.nextLine();
+            if (!Book.checkIfExtentContainsBook(title, year)){
+                System.out.println("W bibliotece nie ma takiej ksiązki");
+            }
+        } while (!Book.checkIfExtentContainsBook(title, year));
+
+        Book book = Book.getBookFromExtent(title, year);
+        UserBook userBook = new UserBook(LocalDate.now(),user, book);
+
+
+    }
+
+    private void addAuthor() {
+        Author author = createAuthor();
+    }
+
+    private Author createAuthor() {
+        String answer;
+        Author author;
+        System.out.print("Imię autora: ");
+        String authorName = scanner.nextLine();
+        System.out.print("Nazwisko autora: ");
+        String authorSurname = scanner.nextLine();
+        if (!Author.checkIfExtentContainsAuthor(authorName, authorSurname)){
+            author = new Author(authorName, authorSurname);
+        } else {
+            author = Author.getAuthorFromExtent(authorName, authorSurname);
+        }
+        System.out.print("Czy chcesz dodać książkę do autora? (t/n): ");
+        answer = scanner.nextLine();
+        while (answer.equals("t")) {
+            Book book = createBook();
+            author.addBook(book);
+            System.out.print("Czy chcesz dodać kolejną ksiażkę do autora? (t/n): ");
+            answer = scanner.nextLine();
+        }
+        return author;
+    }
+
+    private void printAuthors() {
+        Author.showAuthors();
+    }
+
 
     private void printBooks() {
         Book.showBooks();
@@ -54,30 +156,25 @@ public class LibraryControl {
     }
 
     private Book createBook() {
+        String answer;
+        Book book;
         System.out.println("Dodaj książkę");
         System.out.print("Tytuł: ");
         String title = scanner.nextLine();
-        System.out.print("Autor: ");
-        String author = scanner.nextLine();
         System.out.print("Rok wydania: ");
         int year = scanner.nextInt();
         scanner.nextLine();
-        Book book = new Book(title, author, year);
-        System.out.print("Czy chcesz dodać opis książki? (t/n): ");
-        String answer = scanner.nextLine();
-        if (answer.equals("t")) {
-            System.out.print("Opis książki: ");
-            String description = scanner.nextLine();
-            book.setDescription(description);
+        if (!Book.checkIfExtentContainsBook(title, year)){
+            book = new Book(title, year);
+        } else {
+            book = Book.getBookFromExtent(title, year);
         }
-
-        System.out.print("Czy chcesz dodać kategorię? (t/n): ");
+        System.out.print("Czy chcesz dodać autora książki? (t/n): ");
         answer = scanner.nextLine();
         while (answer.equals("t")) {
-            System.out.print("Nazwa kategorii: ");
-            String categories = scanner.nextLine();
-            book.addCategory(categories);
-            System.out.print("Czy chcesz dodać kolejną kategorię? (t/n): ");
+            Author author = createAuthor();
+            book.addAuthor(author);
+            System.out.print("Czy chcesz dodać kolejnego autora? (t/n): ");
             answer = scanner.nextLine();
         }
         return book;
@@ -92,34 +189,13 @@ public class LibraryControl {
     }
 
     private User createUser() {
-        System.out.println("Podaj dane użytkownika");
         System.out.print("Imię: ");
         String firstName = scanner.nextLine();
         System.out.print("Nazwisko:");
         String lastName = scanner.nextLine();
-        System.out.print("Rok urodzenia:");
-        int birthYear = scanner.nextInt();
-        scanner.nextLine();
-        Address address = createAddress();
-        User user = new User(firstName, lastName, address, birthYear);
-        System.out.println("Dodano użytkownika: ");
-        System.out.println(user);
-        return user;
+        return new User(firstName, lastName);
     }
 
-    private Address createAddress() {
-        System.out.println("Podaj adres do korespondencji");
-        System.out.print("Nazwa ulicy: ");
-        String streetName = scanner.nextLine();
-        System.out.print("Numer budynku: ");
-        String streetNumber = scanner.nextLine();
-        System.out.print("Numer mieszkania: ");
-        int flatNumber = scanner.nextInt();
-        scanner.nextLine();
-        System.out.print("Miejscowość: ");
-        String city = scanner.nextLine();
-        return new Address(streetName, streetNumber, flatNumber, city);
-    }
 
     private void exit(){
         try {

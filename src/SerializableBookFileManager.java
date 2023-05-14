@@ -1,5 +1,6 @@
 import exception.DataExportException;
 import exception.DataImportException;
+import model.Book;
 
 import java.io.*;
 import java.util.List;

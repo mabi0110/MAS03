@@ -1,27 +1,46 @@
+package model;
+
 import java.time.LocalDate;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+    private List<UserBook> userBooks;
+
+    public List<UserBook> getUserBooks() {
+        return userBooks;
+    }
+
+    public void setUserBooks(List<UserBook> userBooks) {
+        this.userBooks = userBooks;
+    }
 
     private String firstName;
     private String lastName;
-    private int birthYear;
-    private Address address;
 
-    public User(String firstName, String lastName, Address address, int birthYear) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.address = address;
-        this.birthYear = birthYear;
-        addUser(this);
+    public static boolean checkIfExtentContainsUser(String userName, String userSurname){
+        for (User user : extent) {
+            if (userName.equals(user.firstName) && (userSurname.equals(user.lastName))){
+                return true;
+            }
+        }
+        return false;
     }
 
-    public User(String firstName, String lastName, Address address) {
+    public static User getUserFromExtent(String userName, String userSurname) {
+        for (User user : extent) {
+            if (userName.equals(user.firstName) && (userSurname.equals(user.lastName))){
+                return user;
+            }
+        }
+        return null;
+    }
+
+
+    public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.address = address;
+        this.userBooks = new ArrayList<>();
         addUser(this);
     }
 
@@ -41,31 +60,14 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
-    }
-
-    public int getBirthYear() {
-        return birthYear;
-    }
-
-    public void setBirthYear(int birthYear) {
-        this.birthYear = birthYear;
-    }
-
-    public int getAge() {
-        return LocalDate.now().getYear() - birthYear;
-    }
 
 
     @Override
     public String toString() {
-        return firstName + " " + lastName + " wiek: " + getAge() + " " + address;
+        return firstName + " " + lastName;
     }
+
+
 
     private static List<User> extent = new ArrayList<>();
 
