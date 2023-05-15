@@ -6,44 +6,17 @@ import java.util.List;
 import java.util.Objects;
 
 public class Book implements Serializable {
-
-    private List<UserBook> userBooks;
-
-    public List<UserBook> getUserBooks() {
-        return userBooks;
-    }
-
-    public void setUserBooks(List<UserBook> userBooks) {
-        this.userBooks = userBooks;
-    }
-
     private String title;
-    private List<Author> authors = new ArrayList<>();
     private int year;
-
-
-    public static boolean checkIfExtentContainsBook(String title, int year){
-        for (Book book : extent) {
-            if (title.equals(book.title) && (year == book.year)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static Book getBookFromExtent(String title, int year) {
-        for (Book book : extent) {
-            if (title.equals(book.title) && year == book.year){
-                return book;
-            }
-        }
-        return null;
-    }
+    private static List<Book> extent = new ArrayList<>();
+    private List<Author> authors;
+    private List<UserBook> userBooks;
 
     public Book(String title, int year) {
         this.title = title;
         this.year = year;
         this.userBooks = new ArrayList<>();
+        this.authors = new ArrayList<>();
         addBook(this);
     }
 
@@ -71,24 +44,13 @@ public class Book implements Serializable {
         this.year = year;
     }
 
-
-    @Override
-    public String toString() {
-        String info = "Książka: " + title + " " + year;
-        for (Author author : authors) {
-            info += author.getFirstName() + " " + author.getLastName() + " " ;
-        }
-        return info;
+    public List<UserBook> getUserBooks() {
+        return userBooks;
     }
 
-    public void addAuthor(Author newAuthor){
-        if (!authors.contains(newAuthor)){
-            authors.add(newAuthor);
-            newAuthor.addBook(this);
-        }
+    public void setUserBooks(List<UserBook> userBooks) {
+        this.userBooks = userBooks;
     }
-
-    private static List<Book> extent = new ArrayList<>();
 
     public static List<Book> getExtent() {
         return extent;
@@ -101,12 +63,45 @@ public class Book implements Serializable {
     private static void addBook(Book book){
         extent.add(book);
     }
+    public static boolean checkIfExtentContainsBook(String title, int year){
+        for (Book book : extent) {
+            if (title.equals(book.title) && (year == book.year)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Book getBookFromExtent(String title, int year) {
+        for (Book book : extent) {
+            if (title.equals(book.title) && year == book.year){
+                return book;
+            }
+        }
+        return null;
+    }
+
+    public void addAuthor(Author newAuthor){
+        if (!authors.contains(newAuthor)){
+            authors.add(newAuthor);
+            newAuthor.addBook(this);
+        }
+    }
 
     public static void showBooks(){
         System.out.println("Dostępne książki:");
         for (Book book : extent) {
             System.out.println(book);
         }
+    }
+
+    @Override
+    public String toString() {
+        String info = "Książka: " + title + " " + year + " ";
+        for (Author author : authors) {
+            info += author.getFirstName() + " " + author.getLastName() + " " ;
+        }
+        return info;
     }
 
 }

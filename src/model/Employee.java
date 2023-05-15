@@ -5,13 +5,28 @@ import java.util.List;
 
 public class Employee {
 
+    private static int employeeTempNo = 0;
+    private int employeeNo;
     private String firstName;
     private String lastName;
+    private Library library;
+
+    private static List<Employee> extent = new ArrayList<>();
 
     public Employee(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.employeeNo = employeeTempNo + 1;
+        employeeTempNo += 1;
         addEmployee(this);
+    }
+
+    public int getEmployeeNo() {
+        return employeeNo;
+    }
+
+    public void setEmployeeNo(int employeeNo) {
+        this.employeeNo = employeeNo;
     }
 
     public String getFirstName() {
@@ -31,16 +46,6 @@ public class Employee {
     }
 
 
-
-    @Override
-    public String toString() {
-        return firstName + " " + lastName;
-    }
-
-
-
-    private static List<Employee> extent = new ArrayList<>();
-
     public static List<Employee> getExtent() {
         return extent;
     }
@@ -54,9 +59,18 @@ public class Employee {
     }
 
     public static void showEmployee(){
-        System.out.println("Lista wszystkich pracowników");
+        System.out.println("Lista pracowników");
         for (Employee employee : extent) {
             System.out.println(employee);
         }
+    }
+
+    public void addLibrary(Library library) {
+        this.library = library;
+    }
+
+    @Override
+    public String toString() {
+        return employeeNo + " " + firstName + " " + lastName + " pracuje w " + library.getName();
     }
 }

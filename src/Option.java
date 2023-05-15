@@ -18,7 +18,11 @@ public enum Option {
 
     PRINT_BORROWED_BOOKS(8, "wyswielt historie wypozyczen"),
     PRINT_BORROWED_BOOKS_FOR_USER(9, "wyswielt historie wypozyczen dla uzytkownika"),
-    PRINT_HISTORY_FOR_BOOK(10, "wyswielt historie wypozyczen dla ksiazki");
+    PRINT_HISTORY_FOR_BOOK(10, "wyswielt historie wypozyczen dla ksiazki"),
+
+    ADD_EMPLOYEE(11, "dodaj pracownika"),
+    PRINT_EMPLOYEES(12, "wyświetl pracownikow"),
+    FIND_EMPLOYEE_BY_ID(13, "znajdz pracownika po numerze id");
 
 
     private final int value;

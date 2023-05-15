@@ -5,16 +5,16 @@ import exception.NoSuchOptionException;
 import model.*;
 
 import java.time.LocalDate;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class LibraryControl {
 
-    private Scanner scanner = new Scanner(System.in);
+    private final Library library;
+    private final Scanner scanner = new Scanner(System.in);
     private BookFileManager fileManager;
 
-    LibraryControl(){
+    LibraryControl(Library library){
+        this.library = library;
         try {
             fileManager = new SerializableBookFileManager();
             Book.setExtent(fileManager.importBooks());
@@ -40,8 +40,35 @@ public class LibraryControl {
                 case PRINT_BORROWED_BOOKS -> printBorrowedBooksHistory();
                 case PRINT_BORROWED_BOOKS_FOR_USER -> printBorrowedBooksForUser();
                 case PRINT_HISTORY_FOR_BOOK -> printHistoryForBook();
+                case ADD_EMPLOYEE -> addEmployee();
+                case PRINT_EMPLOYEES -> printEmployees();
+                case FIND_EMPLOYEE_BY_ID -> findEmployeeByID();
             }
         } while (option != Option.EXIT);
+    }
+
+    private void findEmployeeByID() {
+        Employee employee;
+        System.out.print("Podaj id pracownika: ");
+        int id = readInt();
+        try {
+            employee = library.findEmployeeByID(id);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(employee);
+    }
+
+    private void printEmployees() {
+        Map<Integer, Employee> employees = library.getEmployees();
+        Set<Map.Entry<Integer, Employee>> entries = employees.entrySet();
+        for (Map.Entry<Integer, Employee> entry : entries) {
+            System.out.println(entry.getValue());
+        }
+    }
+
+    private void addEmployee() {
+        library.addEmployee(createEmployee());
     }
 
     private void printHistoryForBook() {
@@ -66,10 +93,9 @@ public class LibraryControl {
     private void printBorrowedBooksForUser() {
         String firstName, lastName;
         do {
-            System.out.print("Podaj imię użytkownika: ");
-            firstName = scanner.nextLine();
-            System.out.print("Podaj nazwisko użytkownika:");
-            lastName = scanner.nextLine();
+            List<String> nameAndSurname = readNameAndSurname();
+            firstName = nameAndSurname.get(0);
+            lastName = nameAndSurname.get(1);
             if (!User.checkIfExtentContainsUser(firstName, lastName)){
                 System.out.println("W bibliotece nie ma takiego użytkownika");
             }
@@ -87,10 +113,9 @@ public class LibraryControl {
         String firstName, lastName, title;
         int year;
         do {
-            System.out.print("Podaj imię użytkownika: ");
-            firstName = scanner.nextLine();
-            System.out.print("Podaj nazwisko użytkownika:");
-            lastName = scanner.nextLine();
+            List<String> nameAndSurname = readNameAndSurname();
+            firstName = nameAndSurname.get(0);
+            lastName = nameAndSurname.get(1);
             if (!User.checkIfExtentContainsUser(firstName, lastName)){
                 System.out.println("W bibliotece nie ma takiego użytkownika");
             }
@@ -110,22 +135,15 @@ public class LibraryControl {
         } while (!Book.checkIfExtentContainsBook(title, year));
 
         Book book = Book.getBookFromExtent(title, year);
-        UserBook userBook = new UserBook(LocalDate.now(),user, book);
-
-
-    }
-
-    private void addAuthor() {
-        Author author = createAuthor();
+        new UserBook(LocalDate.now(),user, book);
     }
 
     private Author createAuthor() {
         String answer;
         Author author;
-        System.out.print("Imię autora: ");
-        String authorName = scanner.nextLine();
-        System.out.print("Nazwisko autora: ");
-        String authorSurname = scanner.nextLine();
+        List<String> nameAndSurname = readNameAndSurname();
+        String authorName = nameAndSurname.get(0);
+        String authorSurname = nameAndSurname.get(1);
         if (!Author.checkIfExtentContainsAuthor(authorName, authorSurname)){
             author = new Author(authorName, authorSurname);
         } else {
@@ -142,18 +160,6 @@ public class LibraryControl {
         return author;
     }
 
-    private void printAuthors() {
-        Author.showAuthors();
-    }
-
-
-    private void printBooks() {
-        Book.showBooks();
-    }
-
-    private void addBook() {
-        Book book = createBook();
-    }
 
     private Book createBook() {
         String answer;
@@ -184,18 +190,46 @@ public class LibraryControl {
         User.showUsers();
     }
 
-    private void addUser() {
-        User user = createUser();
+    private void printAuthors() {
+        Author.showAuthors();
     }
 
-    private User createUser() {
-        System.out.print("Imię: ");
-        String firstName = scanner.nextLine();
-        System.out.print("Nazwisko:");
-        String lastName = scanner.nextLine();
-        return new User(firstName, lastName);
+    private void printBooks() {
+        Book.showBooks();
     }
 
+    private void addUser() { createUser();}
+
+    private void addBook() {
+        createBook();
+    }
+
+    private void addAuthor() { createAuthor(); }
+
+    private void createUser() {
+        List<String> nameAndSurname = readNameAndSurname();
+        new User(nameAndSurname.get(0), nameAndSurname.get(1));
+    }
+
+    private Employee createEmployee() {
+        List<String> nameAndSurname = readNameAndSurname();
+        return new Employee(nameAndSurname.get(0), nameAndSurname.get(1));
+    }
+
+    private List<String> readNameAndSurname(){
+        List<String> nameAndSurname = new ArrayList<>();
+        System.out.print("Podaj imię: ");
+        nameAndSurname.add(scanner.nextLine());
+        System.out.print("Podaj nazwisko: ");
+        nameAndSurname.add(scanner.nextLine());
+        return nameAndSurname;
+    }
+
+    private int readInt(){
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        return id;
+    }
 
     private void exit(){
         try {

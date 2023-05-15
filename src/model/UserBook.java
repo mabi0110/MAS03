@@ -11,6 +11,7 @@ public class UserBook {
     private User user;
 
     private Book book;
+    private static List<UserBook> extent = new ArrayList<>();
 
     public UserBook(LocalDate startDate, User user, Book book) {
         this.startDate = startDate;
@@ -21,7 +22,7 @@ public class UserBook {
         book.getUserBooks().add(this);
     }
 
-    private static List<UserBook> extent = new ArrayList<>();
+
 
     public static void printHistory(){
         for (UserBook userBook : extent) {

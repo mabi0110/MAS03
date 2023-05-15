@@ -8,61 +8,14 @@ import java.util.Objects;
 public class Author implements Serializable {
     private String firstName;
     private String lastName;
-    private List<Book> books = new ArrayList<>();
     private static List<Author> extent = new ArrayList<>();
-
-    public static boolean checkIfExtentContainsAuthor(String authorName, String authorSurname){
-        for (Author author : extent) {
-            if (authorName.equals(author.firstName) && (authorSurname.equals(author.lastName))){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static Author getAuthorFromExtent(String authorName, String authorSurname) {
-        for (Author author : extent) {
-            if (authorName.equals(author.firstName) && (authorSurname.equals(author.lastName))){
-                return author;
-            }
-        }
-        return null;
-    }
-
+    private List<Book> books;
 
     public Author(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.books = new ArrayList<>();
         addAuthor(this);
-    }
-
-    private static void addAuthor(Author author){
-        extent.add(author);
-    }
-
-
-
-    public void addBook(Book newBook){
-        if (!books.contains(newBook)){
-            books.add(newBook);
-            newBook.addAuthor(this);
-        }
-    }
-
-    @Override
-    public String toString() {
-        String info = "Autor: " + firstName + " " + lastName;
-        for (Book b: books){
-            info += " " + b.getTitle();
-        }
-        return info;
-    }
-
-    public static void showAuthors(){
-        System.out.println("Lista wszystkich autorów");
-        for (Author a : extent) {
-            System.out.println(a);
-        }
     }
 
     public String getFirstName() {
@@ -96,5 +49,50 @@ public class Author implements Serializable {
     public static void setExtent(List<Author> extent) {
         Author.extent = extent;
     }
+
+    private static void addAuthor(Author author){
+        extent.add(author);
+    }
+
+    public void addBook(Book newBook){
+        if (!books.contains(newBook)){
+            books.add(newBook);
+            newBook.addAuthor(this);
+        }
+    }
+
+    public static boolean checkIfExtentContainsAuthor(String authorName, String authorSurname){
+        for (Author author : extent) {
+            if (authorName.equals(author.firstName) && (authorSurname.equals(author.lastName))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Author getAuthorFromExtent(String authorName, String authorSurname) {
+        for (Author author : extent) {
+            if (authorName.equals(author.firstName) && (authorSurname.equals(author.lastName))){
+                return author;
+            }
+        }
+        return null;
+    }
+
+    public static void showAuthors(){
+        System.out.println("Lista wszystkich autorów");
+        for (Author a : extent) {
+            System.out.println(a);
+        }
+    }
+    @Override
+    public String toString() {
+        String info = "Autor: " + firstName + " " + lastName;
+        for (Book b: books){
+            info += " " + b.getTitle();
+        }
+        return info;
+    }
+
 
 }
