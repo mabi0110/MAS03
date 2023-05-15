@@ -9,6 +9,7 @@ import java.util.*;
 
 public class LibraryControl {
 
+    ContactBook contactBook = new ContactBook("Książka kontaktów");
     private final Library library;
     private final Scanner scanner = new Scanner(System.in);
     private BookFileManager fileManager;
@@ -43,8 +44,25 @@ public class LibraryControl {
                 case ADD_EMPLOYEE -> addEmployee();
                 case PRINT_EMPLOYEES -> printEmployees();
                 case FIND_EMPLOYEE_BY_ID -> findEmployeeByID();
+                case ADD_CONTACT -> addContact();
+                case PRINT_CONTACTS -> printContacts();
             }
         } while (option != Option.EXIT);
+    }
+
+    private void printContacts() {
+        System.out.println(contactBook);
+    }
+
+    private void addContact() {
+        contactBook.addContact(createContact());
+    }
+
+    private Contact createContact() {
+        List<String> contact = readContact();
+        String name = contact.get(0);
+        String phone = contact.get(1);
+        return new Contact(contactBook, name, phone);
     }
 
     private void findEmployeeByID() {
@@ -78,8 +96,7 @@ public class LibraryControl {
             System.out.print("Podaj tytuł ksiązki: ");
             title = scanner.nextLine();
             System.out.print("Podaj rok wydania: ");
-            year = scanner.nextInt();
-            scanner.nextLine();
+            year = readInt();
             if (!Book.checkIfExtentContainsBook(title, year)){
                 System.out.println("W bibliotece nie ma takiej ksiązki");
             }
@@ -127,8 +144,7 @@ public class LibraryControl {
             System.out.print("Podaj tytuł ksiązki: ");
             title = scanner.nextLine();
             System.out.print("Podaj rok wydania: ");
-            year = scanner.nextInt();
-            scanner.nextLine();
+            year = readInt();
             if (!Book.checkIfExtentContainsBook(title, year)){
                 System.out.println("W bibliotece nie ma takiej ksiązki");
             }
@@ -168,8 +184,7 @@ public class LibraryControl {
         System.out.print("Tytuł: ");
         String title = scanner.nextLine();
         System.out.print("Rok wydania: ");
-        int year = scanner.nextInt();
-        scanner.nextLine();
+        int year = readInt();
         if (!Book.checkIfExtentContainsBook(title, year)){
             book = new Book(title, year);
         } else {
@@ -215,6 +230,16 @@ public class LibraryControl {
         List<String> nameAndSurname = readNameAndSurname();
         return new Employee(nameAndSurname.get(0), nameAndSurname.get(1));
     }
+
+    private List<String> readContact(){
+        List<String> contactData = new ArrayList<>();
+        System.out.print("Podaj imię: ");
+        contactData.add(scanner.nextLine());
+        System.out.print("Podaj telefon: ");
+        contactData.add(scanner.nextLine());
+        return contactData;
+    }
+
 
     private List<String> readNameAndSurname(){
         List<String> nameAndSurname = new ArrayList<>();

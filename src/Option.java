@@ -22,7 +22,11 @@ public enum Option {
 
     ADD_EMPLOYEE(11, "dodaj pracownika"),
     PRINT_EMPLOYEES(12, "wyświetl pracownikow"),
-    FIND_EMPLOYEE_BY_ID(13, "znajdz pracownika po numerze id");
+    FIND_EMPLOYEE_BY_ID(13, "znajdz pracownika po numerze id"),
+
+    ADD_CONTACT(14, "dodaj kontakt do ksiązki kontaktów"),
+    PRINT_CONTACTS(15, "wyświetl kontakty");
+
 
 
     private final int value;

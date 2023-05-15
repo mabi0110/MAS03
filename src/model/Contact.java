@@ -3,17 +3,17 @@ package model;
 public class Contact {
 
     private String name;
-    private int phone;
+    private String phone;
 
     private ContactBook contactBook;
 
-    public Contact(ContactBook contactBook, String name, int phone) {
+    public Contact(ContactBook contactBook, String name, String phone) {
         this.name = name;
         this.phone = phone;
         this.contactBook = contactBook;
     }
 
-    public static Contact createNewContact(ContactBook contactBook, String name, int phone) throws Exception {
+    public static Contact createNewContact(ContactBook contactBook, String name, String phone) throws Exception {
         if (contactBook == null){
             throw new Exception("ContactBook nie istnieje");
         }
@@ -38,11 +38,11 @@ public class Contact {
         this.name = name;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 }
