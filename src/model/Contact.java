@@ -7,7 +7,7 @@ public class Contact {
 
     private ContactBook contactBook;
 
-    public Contact(ContactBook contactBook, String name, String phone) {
+    private Contact(ContactBook contactBook, String name, String phone) {
         this.name = name;
         this.phone = phone;
         this.contactBook = contactBook;

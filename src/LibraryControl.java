@@ -55,14 +55,18 @@ public class LibraryControl {
     }
 
     private void addContact() {
-        contactBook.addContact(createContact());
+        try {
+            contactBook.addContact(createContact());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private Contact createContact() {
+    private Contact createContact() throws Exception {
         List<String> contact = readContact();
         String name = contact.get(0);
         String phone = contact.get(1);
-        return new Contact(contactBook, name, phone);
+        return Contact.createNewContact(contactBook, name, phone);
     }
 
     private void findEmployeeByID() {
