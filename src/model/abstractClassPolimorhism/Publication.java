@@ -1,4 +1,4 @@
-package model;
+package model.abstractClassPolimorhism;
 
 import java.io.Serializable;
 import java.time.Year;

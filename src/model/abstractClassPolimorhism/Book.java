@@ -1,10 +1,6 @@
-package model;
+package model.abstractClassPolimorhism;
 
-import java.io.Serializable;
 import java.time.Year;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class Book extends Publication {
     private String author;

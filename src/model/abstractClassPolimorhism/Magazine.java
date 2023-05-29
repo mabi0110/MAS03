@@ -1,6 +1,5 @@
-package model;
+package model.abstractClassPolimorhism;
 
-import java.time.Month;
 import java.time.MonthDay;
 import java.time.Year;
 
