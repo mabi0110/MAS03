@@ -1,3 +1,6 @@
+import model.dynamiczne.LibrarianDyn;
+import model.dynamiczne.PersonDyn;
+import model.dynamiczne.UserDyn;
 import model.klasaAbstrakcyjnaPolimor.Book;
 import model.klasaAbstrakcyjnaPolimor.Magazine;
 import model.klasaAbstrakcyjnaPolimor.Publication;
@@ -39,7 +42,11 @@ public class Main {
         librarianAdmin.addPerson(new Admin("Adam", "Nowak", Year.of(2000), "e12346", "789123456"));
         librarianAdmin.addPerson(new Librarian("Ela", "Nowak", Year.of(1999), "e12347"));
 
-
+        // dynamiczne
+        PersonDyn p = new PersonDyn("Jan", "Nowak", Year.of(2000));
+        p = new UserDyn(p, "u123456789");
+        //p = new LibrarianDyn(p, 6000d);
+        System.out.println(p);
 
     }
 }
