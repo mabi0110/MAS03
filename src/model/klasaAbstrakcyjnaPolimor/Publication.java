@@ -1,6 +1,5 @@
-package model.abstractClassPolimorhism;
+package model.klasaAbstrakcyjnaPolimor;
 
-import java.io.Serializable;
 import java.time.Year;
 
 public abstract class Publication {

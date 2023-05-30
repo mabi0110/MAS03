@@ -1,4 +1,4 @@
-package model.abstractClassPolimorhism;
+package model.klasaAbstrakcyjnaPolimor;
 
 import java.time.MonthDay;
 import java.time.Year;

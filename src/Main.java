@@ -1,14 +1,18 @@
+import model.klasaAbstrakcyjnaPolimor.Book;
+import model.klasaAbstrakcyjnaPolimor.Magazine;
+import model.klasaAbstrakcyjnaPolimor.Publication;
 import model.wielodziedziczenie.Admin;
 import model.wielodziedziczenie.Librarian;
 import model.wielodziedziczenie.LibrarianAdmin;
 import model.wielodziedziczenie.User;
 
 import java.time.Year;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
-        /*
 
         //klasa abstrakcyjna i polimorfizm
 
@@ -25,10 +29,6 @@ public class Main {
             System.out.println(publication.getData());
         }
 
-        */
-
-        /*
-
         // wielodziedziczenie
 
         LibrarianAdmin librarianAdmin = new LibrarianAdmin("Jan", "Nowak", Year.of(1992), "e12345", "888123123");
@@ -39,6 +39,7 @@ public class Main {
         librarianAdmin.addPerson(new Admin("Adam", "Nowak", Year.of(2000), "e12346", "789123456"));
         librarianAdmin.addPerson(new Librarian("Ela", "Nowak", Year.of(1999), "e12347"));
 
-        */
+
+
     }
 }
